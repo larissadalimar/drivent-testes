@@ -41,3 +41,19 @@ export function createhAddressWithCEP() {
     uf: "SP",
   };
 }
+
+export const generateValidEnrollmentBody = (user: User) => ({
+  name: faker.name.findName(),
+  cpf: generateCPF(),
+  birthday: faker.date.past().toISOString(),
+  phone: "(21) 98999-9999",
+  userId: user.id
+});
+
+export async function createEnrollment(user: User) {
+  const enrollment = generateValidEnrollmentBody(user);
+
+  return await prisma.enrollment.create({
+    data: enrollment
+  });
+}
