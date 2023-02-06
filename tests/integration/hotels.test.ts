@@ -196,6 +196,22 @@ describe("GET /hotels/hotelId", () => {
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
+
+    it("should respond 404 if the hotel does not exist", async () => {
+      const userWithEnrollment = await createUser();
+
+      const enrollmentWithTicket = await createEnrollment(userWithEnrollment);
+
+      await createTicketForHotel(enrollmentWithTicket, false, true, true);
+
+      const token = await generateValidToken(userWithEnrollment);
+
+      const hotels = await getHotels();
+
+      const response = await server.get(`/hotels/${hotels[hotels.length-1].id + 1}`).set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
   
     it("should respond 402 if the user enrollment ticket is not paid", async () => {
       const userWithEnrollment = await createUser();
