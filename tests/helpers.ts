@@ -16,6 +16,7 @@ export async function cleanDb() {
   await prisma.session.deleteMany({});
   await prisma.user.deleteMany({});
   await prisma.ticketType.deleteMany({});
+  await prisma.room.deleteMany({});
   await prisma.hotel.deleteMany({});
 }
 
@@ -57,7 +58,7 @@ async function createTicketType(isRemote: boolean, includesHotel: boolean) {
 
 export async function createTicket(enrollment: Enrollment, isRemote: boolean, includesHotel: boolean, isPaid: boolean) {
   const ticketType = await createTicketType(isRemote, includesHotel);
-  
+
   if(isPaid) {
     return await prisma.ticket.create({
       data: {
@@ -79,4 +80,34 @@ export async function createTicket(enrollment: Enrollment, isRemote: boolean, in
 
 export async function getHotels() {
   return await prisma.hotel.findMany();
+}
+
+export async function getHotelWithRoom(id: number) {
+  return await prisma.hotel.findFirst({
+    where: {
+      id: id
+    },
+    include: {
+      Rooms: true
+    }
+  });
+}
+
+export async function createHotel() {
+  return await prisma.hotel.create({
+    data: {
+      name: faker.name.findName(),
+      image: faker.image.imageUrl()
+    }
+  });
+}
+
+export async function createRoom(hotelId: number) {
+  return await prisma.room.create({
+    data: {
+      name: faker.name.findName(),
+      capacity: faker.datatype.number(),
+      hotelId: hotelId
+    }
+  });
 }

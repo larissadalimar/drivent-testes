@@ -24,6 +24,8 @@ export async function getHotelRooms(req: AuthenticatedRequest, res: Response) {
 
     res.send(hotelWithRooms);
   } catch (error) {
+    if(error.name === "NotFoundError") res.sendStatus(404);
+    if(error.status === 402) res.sendStatus(402);
     res.status(500).send(error.message);
   }
 }

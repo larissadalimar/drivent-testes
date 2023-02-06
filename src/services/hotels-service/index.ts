@@ -24,7 +24,7 @@ async function getHotelRooms(hotelId: number, userId: number) {
 
   if(!enrollment) throw notFoundError();
 
-  const ticket = await ticketRepository.findTicketByEnrollmentId(userId);
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
 
   if(!ticket) throw notFoundError();
 
@@ -34,7 +34,8 @@ async function getHotelRooms(hotelId: number, userId: number) {
   const hotel = await hotelRepository.getHotelWithRooms(hotelId);
 
   if(!hotel) throw notFoundError();
-  else hotel;
+  
+  return hotel;
 }
 
 const hotelService = {
