@@ -9,8 +9,8 @@ async function getAll(userId: number): Promise<Hotel[]> {
 
   if(!enrollment) throw notFoundError();
 
-  const ticket = await ticketRepository.findTicketByEnrollmentId(userId);
-
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
+  
   if(!ticket) throw notFoundError();
 
   if(ticket.status !== TicketStatus.PAID || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
